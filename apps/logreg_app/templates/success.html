@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+        crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+        crossorigin="anonymous"></script>
+    <title>Welcome to URFaveBooks!</title>
+    <style>
+        .user_form th {
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Success! Welcome, {{ current_user.first_name }}</h1>
+    {% if messages %} {% for message in messages %}
+    <p> {{ message }}</p>
+    {% endfor %} {% endif %}
+    <table>
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Rating</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{user.id}}</td>
+            <td>{{user.first_name}}</td>
+            <td>{{user.last_name}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.created_at}}</td>
+            <td>Actions
+                <a href="/user/{{ user.id }}">Show</a>
+                <a href="/user/{{ user.id }}/edit">Edit</a>
+                <a href="/user/{{ user.id }}">delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        <button>
+            <a href="{% url 'books_app:newbook' %}">Add a Book and Review</a>
+        </button>
+        <div class="logout">
+            <form action="logout" method="post">
+                {% csrf_token %}
+                <input type="submit" name="logout" value="logout">
+            </form>
+        </div>
+        <!-- {% if messages %} {% for message in messages %}
+        <p {% if messages.tags %} {% endif %}> {{ message }}</p>
+        {% endfor %} 
+    {% endif %}
+    <h1>Success! Welcome {{ users.first_name }}</h1>
+    <p><strong>First Name:</strong> {{ users.first_name }}</p><br>
+    <p><strong>Last Name:</strong> {{ users.last_name }}</p><br>
+    <p><strong>Email:</strong> {{ users.email }}</p><br>
+    <p><strong>Created at:</strong> {{ users.created_at }}</p><br> -->
+</body>
+
+</html>
