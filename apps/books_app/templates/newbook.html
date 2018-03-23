@@ -1,13 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+     {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
         crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
         crossorigin="anonymous"></script>
-    <title>Welcome to URFaveBooks!</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/newbook.css' %}">
+    <link rel="stylesheet" type="text/js" href="{% static 'js/newbook.js' %}">
+    <script>
+
+    </script>
+    <title>Book Review Login and Register</title>
 </head>
 <body>
-    
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/">UR - Fave - Books</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown link
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <form action="newBook" method="post">
+            {% csrf_token %}
+            <!-- TITLE -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Title</span>
+                </div>
+                <input type="text" name="title" class="form-control">
+            </div>
+                <!-- AUTHOR -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Author</span>
+                </div>
+                <input type="text" name="author" class="form-control">
+            </div>
+
+                <!-- NEW AUTHOR -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Book Author</span>
+                </div>
+                <input type="text" name="new_input_author" class="form-control">
+            </div>
+
+                <!-- REVIEW -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Review</span>
+                </div>
+                <input type="text" name="review" class="form-control">
+            </div>
+            
+                <input type="button" type="submit" name="submit" value="Submit"  class="btn btn-lg btn-outline">
+        </form>
+    </div>
 </body>
 </html>

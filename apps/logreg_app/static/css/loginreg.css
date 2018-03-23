@@ -1,0 +1,44 @@
+.navbar{
+    background-color: rgba(128, 128, 128, 0.625);
+}
+h1{
+    color: rgb(71, 173, 196);     
+}
+
+.nav-link{
+    color: rgb(71, 173, 196);
+    padding: 5px;
+    font-size: 20px;
+    margin: 10px;
+    margin-left: 30px;
+}
+.navbar-brand{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: bolder;
+    font-stretch: semi-expanded;
+    margin-right: 700px;
+}
+.forms{
+    margin: 200px;
+}
+.login{
+    margin-bottom: 50px;
+    border: 15px solid rgba(128, 128, 128, 0.625);
+    padding: 30px;
+    
+}
+.register{
+    margin-bottom: 50px;
+    border: 15px solid rgba(128, 128, 128, 0.625);
+    padding: 30px;
+    
+}
+.input-group{
+    margin-bottom: 15px;
+}
+.input-group-text{
+    font-size: 20px;
+    color: rgb(71, 173, 196);
+    font-weight: bold;
+}
