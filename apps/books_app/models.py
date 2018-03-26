@@ -2,41 +2,41 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from ..logreg_app.models import Users
 
 # Create your models here.
 class BooksValidator (models.Manager):
-    def book_validator(self,postDate):
+    def validateBooks(self,postDate):
         errors = {}
         new_author = False
-
-        if len(postDate['title']) < 1: 
-            errors['title'] = 'The title of the book most be entered'
-        if postDate['author'] == 'None' and postDate['new_input_author'] == 'name':
-            errors['author'] = 'An author must be selected or added'
-        if postDate['author'] != 'None' and postDate['new_input_author'] != 'name':
-            errors['author'] = 'You are not able to select a author and try to add a new one at the same time'
+        if len(postDate['title']) < 2:
+            errors['title'] = "Title must have more then 2 characters" 
+        if len(postDate['author']) == 'None' and postDate['inputed_author'] == 'name':
+            errors['author'] = 'An author must be selected or added before submiting form'
+        if postDate['author'] != 'None' and postDate['inputed_author'] != 'name':
+            errors['author'] = 'You cannot select an author and try to add a new one at the same time'
         try:
-            #if the author in the database?
-            Author.objects.get(name=postDate['new_input_author'])
-            #if yes:
-            errors['author'] = 'Author is already in our system'
+            #is the author already in the database?
+            Books.objects.get(author=postDate['inputed_author'])
+            #error message
+            errors['author'] = 'You cannot select an author and try to add a new one at the same time'
         except Exception:
-            if postDate['new_input_author'] != 'name':
+            if postDate['inputed_author'] != 'name':
                 new_author = True
         
         if postDate['review'] < 10:
-            errors['review'] = 'Your book review needs to be more than 10 characters'
+            errors['review'] = 'Your review needs to be more than ten characters long before submitting'
         if errors:
             return (errors)
-        
-        #What author selection was used?
+
+        # What author selection was used?
         #IF (TRUE) there was a NEW author selected 
         if new_author:
             #what is the name of the new author?
             input_created_author = postDate['new_input_author']
             print input_created_author
             #create the author and store in VAR
-            new_author = Author.objects.create(name = input_created_author)
+            new_author = Authors.objects.create(author_name = input_created_author)
             #Put the new author in a new VAR to use when CREATING the BOOK
             author_for_book_created = new_author
         else:
@@ -45,68 +45,62 @@ class BooksValidator (models.Manager):
             selected_author = postDate['selected_author']
             print  selected_author 
             #find the name of the selected author
-            author_for_book_created = Author.objects.get(name = selected_author)
+            author_for_book_created = Authors.objects.get(name = selected_author)
             
         #Creating a new book
-        created_title = postDate['title']
-        new_book_created = Book.objects.create(title=created_title, author=author_for_book_created)
+        title = postDate['title']
+        user = postDate['current_user_id']
+        new_book_created = Books.objects.create(title=title, author=author_for_book_created,user=user)
         print new_book_created
 
-    def review_validator(self,postDate):
-        errors = {}
-        if len(postDate['review']) < 15:
-            errors['review'] = 'Review must be at least 15 characters long'
-
-        input_review = postDate['review']
-        input_rating = postDate['rating']
-        user_name = postDate['user_name']
-        id_user = postDate['id_user']
-        #try to retrieve the book this review is for
+        #Create the review
+        text = postDate['review']
+        rating = postDate['rating']
+        reviewer = postDate['current_user_id']
         try:
-            id_book = postDate['id_book']
-            find_book = Book.objects.get(id=id_book)
+            book_id = postDate['book_id']
+            book_search = Books.objects.get(id=book_id)
         except Exception:
-            errors['book'] = 'Could not find book'
+            errors['book']= 'Book is not in the database'
         if errors:
             return errors
-        Review.objects.create(content=input_review, rating=input_rating,
-                                commentor=user_name, commentor_id=id_user, book=find_book)
-        return (errors)
-
-
-class Author(models.Model):
-    name = models.CharField(max_length=100)
+        Reviews.objects.create(text=text, rating=rating, reviewer=reviewer, book = book_id)
+        return errors
+class Authors(models.Model):
+    author_name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
     objects = BooksValidator()
 
-    # def __str__(self):
-    #     return "Name: " + self.name
-
-    # def __repr__(self):
-    #     return "<Authors object: name: {}>".format(self.name)
-
-
-class Book(models.Model):
-    title = models.CharField(max_length=100)
-    author = models.ForeignKey(Author, related_name="books")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+class Books(models.Model):
+    title = models.CharField(max_length = 255)
+    author = models.ForeignKey(Authors, related_name='authors')
+    user = models.ForeignKey(Users, related_name = "who_created_book")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
     objects = BooksValidator()
 
-    # def __str__(self):
-    #     return "Title: " + self.title
+    def __str__(self):
+        return "Title: " + self.title
 
-    # def __repr__(self):
-    #     return "<Books object: title: {}, author: {} >".format(self.title, self.author)
+    def __repr__(self):
+        return "<Books object: title: {}, author: {} >".format(self.title, self.author)
 
-class Review(models.Model):
-    review = models.TextField()
+class Reviews(models.Model):
+    text = models.TextField(default = "N/A")
     rating = models.IntegerField()
-    commentor = models.IntegerField(max_length=20)
-    commentor_id = models.IntegerField()
-    book = models.ForeignKey(Book, related_name="reviews")
-    reviewer = models.ForeignKey(Book, related_name="user_reviews")
-    created_at = models.DateTimeField(auto_now_add=True)
-    objects = BooksValidator()
+    book = models.ForeignKey(Books, related_name = "book_reviewed")
+    reviewer = models.ForeignKey(Users, related_name = "who_reviewed_book")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return "Reviews: " + self.reviewer
+
+    def __repr__(self):
+        return "<Reviews Object: text: {}, rating: {}, book: {}, reviewer: {}>".format(self.text, self.rating, self.reviewer, self.book)
+
+
 
 
             

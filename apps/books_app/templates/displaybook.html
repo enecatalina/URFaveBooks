@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,28 +10,10 @@
         crossorigin="anonymous"></script>
     <title>Welcome to URFaveBooks!</title>
     <style>
-        .user_form th {
-            padding: 30px;
-        }
+       
     </style>
 </head>
-
 <body>
-    <h1>Success! Welcome, {{ current_user.first_name }}</h1>
-    {% if messages %} {% for message in messages %}
-    <p> {{ message }}</p>
-    {% endfor %} 
-    {% endif %}
-    
-    <a href="{% url 'books:new_book' %}"> Add a Book</a>
-        
-        
-        <div class="logout">
-            <form action="logout" method="post">
-                {% csrf_token %}
-                <input type="submit" name="logout" value="logout">
-            </form>
-        </div>
+    hello display
 </body>
-
 </html>

@@ -51,7 +51,7 @@
         </div>
     </nav>
     <div class="container-fluid">
-        <form action="newBook" method="post">
+        <form action="/new_book" method="POST">
             {% csrf_token %}
             <!-- TITLE -->
             <div class="input-group">
@@ -60,20 +60,24 @@
                 </div>
                 <input type="text" name="title" class="form-control">
             </div>
-                <!-- AUTHOR -->
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Author</span>
-                </div>
-                <input type="text" name="author" class="form-control">
-            </div>
-
-                <!-- NEW AUTHOR -->
+            <!-- AUTHOR -->
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Book Author</span>
                 </div>
-                <input type="text" name="new_input_author" class="form-control">
+                <select name="author" id="">
+                    <option value="None">N/A</option>
+                    {% for author in authors %}
+                    <option value="{{ author.author }}">{{ author.author}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+                <!-- New AUTHOR -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Book Author</span>
+                </div>
+                <input type="text" name="inputed_author" class="form-control">
             </div>
 
                 <!-- REVIEW -->
@@ -84,7 +88,18 @@
                 <input type="text" name="review" class="form-control">
             </div>
             
-                <input type="button" type="submit" name="submit" value="Submit"  class="btn btn-lg btn-outline">
+            <!-- RATING -->
+            <select name="rating" id="">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <input type="hidden" name="current_user_id" value="{{ request.session.current_user.id }}">
+            <input type="submit" name="submit" value="Add New Book"  class="btn btn-lg btn-outline">
+            
+            <!-- <input type="hidden" name="current_user_name" value="{{ request.session.current_user.name }}"> -->
         </form>
     </div>
 </body>

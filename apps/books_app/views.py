@@ -2,28 +2,26 @@
 from __future__ import unicode_literals
 
 from models import *
-from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
+from models import Books, Authors, Reviews
+from django.core.urlresolvers import reverse
+from django.contrib import messages
+from django.shortcuts import render, redirect, reverse
+from django.template import Template, Context
 
 # Create your views here.
-def newbook(request):
-    
-    return render(request, "newbook.html")
-    # if request.method == 'POST':
-    #     errors = Book.objects.book_validator(request.POST)
-    #     if len(errors):
-    #         for key, error in errors.iteritems():
-    #             print error
-    #         return redirect('books_app/newbook.html')
-    #     else:
-    #         context = {
-    #             'all_authors' : Author.objects.all()
-    #         }
-    #         return render(request,'logreg_app/success.html',context)
-    #     the_book = Book.objects.get(id=id_book)
-    #     title = request.POST['title'],
-    #     author = the_book.author.id,
-    #     rating = request.POST['rating']
-    #     review = request.POST['review']
-    #     new_author = ''
-    #     Review.objects.create(tite=title,rating=rating,review=review)   
-    #     return render(request, "newbook.html") 
+def new_book(request):
+    if request.method == "POST":
+        errors = Books.objects.validateBooks(request.POST)
+        if len(errors):
+            for key, error in errors.iteritems():
+                print error
+        return redirect('/books')
+    else:
+        context = {
+            'authors': Authors.objects.all()
+        }
+        return render(request, 'books/new_book', context)
+
+def displaybook(request):
+    return render(request, 'displaybook.html')
+   
