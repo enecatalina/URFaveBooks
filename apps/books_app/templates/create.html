@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     {% load static %}
+     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
         crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
         crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/newbook.css' %}">
-    <link rel="stylesheet" type="text/js" href="{% static 'js/newbook.js' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/new_book.css' %}">
+    <link rel="stylesheet" type="text/js" href="{% static 'js/new_book.js' %}">
     <script>
 
     </script>
@@ -51,7 +52,7 @@
         </div>
     </nav>
     <div class="container-fluid">
-        <form action="/new_book" method="POST">
+        <form action="/books/create" method="post">
             {% csrf_token %}
             <!-- TITLE -->
             <div class="input-group">

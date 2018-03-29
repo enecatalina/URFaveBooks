@@ -20,16 +20,9 @@ def create(request):
         current_user = Users.objects.get(email = request.POST['email'])
         request.session['user_id'] = current_user.id
         print "user was created"
-        return render(request, "success.html")
+        return render(request, "books/success.html")
     print "user was able to create profile"
 
-def success(request):
-    print "show page working"
-    context = {
-        'user': Users.objects.all(),
-        'current_user': Users.objects.get(id=request.session['user_id'])
-    }
-    return render(request, "success.html", context)
 
 def login(request):
     print "show page working"
@@ -41,7 +34,7 @@ def login(request):
     else:
         current_user = Users.objects.get(email=request.POST['email'])
         request.session['user_id']= current_user.id
-        return redirect('/success')
+        return redirect('books/success')
     print "user was able to login"
 
 def logout(request):
