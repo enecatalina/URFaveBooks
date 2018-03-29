@@ -24,7 +24,7 @@ def create(request):
         if len(errors):
             for key, error in errors.iteritems():
                 print error
-        return redirect('/books/home.html')
+        return redirect('/books/success')
     else:
         context = {
             'authors' : Authors.objects.all()
@@ -35,4 +35,6 @@ def displaybook(request):
 
     return render(request, 'displaybook.html')
 
-   
+def logout(request):
+    request.session.clear()
+    return redirect('/')

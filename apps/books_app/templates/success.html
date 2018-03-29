@@ -66,10 +66,10 @@
             </form>
         </div>
     <div class="container-fluid">
-        {% for book in books %}
+        {% for books in books %}
         <div>
-            {{book.title}}
-            {{book.author}}
+            {{books.title}}
+            {{books.author}}
         {%endfor%}
 
         </div>

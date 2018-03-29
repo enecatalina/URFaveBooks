@@ -69,7 +69,7 @@
                 <select name="author" id="">
                     <option value="None">N/A</option>
                     {% for author in authors %}
-                    <option value="{{ author.author }}">{{ author.author}}</option>
+                    <option value="{{ author.author_name }}">{{ author.author_name}}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -97,7 +97,7 @@
                 <option value="4">4</option>
                 <option value="5">5</option>
             </select>
-            <input type="hidden" name="current_user_id" value="{{ request.session.current_user.id }}">
+            <input type="hidden" name="user_id" value="{{ request.session.user_id }}">
             <input type="submit" name="submit" value="Add New Book"  class="btn btn-lg btn-outline">
             
             <!-- <input type="hidden" name="current_user_name" value="{{ request.session.current_user.name }}"> -->

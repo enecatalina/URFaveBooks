@@ -33,7 +33,7 @@ class BooksValidator (models.Manager):
         #IF (TRUE) there was a NEW author selected 
         if new_author:
             #what is the name of the new author?
-            input_created_author = postDate['new_input_author']
+            input_created_author = postDate['inputed_author']
             print input_created_author
             #create the author and store in VAR
             new_author = Authors.objects.create(author_name = input_created_author)
@@ -49,23 +49,25 @@ class BooksValidator (models.Manager):
             
         #Creating a new book
         title = postDate['title']
-        user = postDate['current_user_id']
-        new_book_created = Books.objects.create(title=title, author=author_for_book_created,user=user)
+        user_id = postDate['user_id']
+        new_book_created = Books.objects.create(title=title, author=author_for_book_created, user_id=user_id)
         print new_book_created
 
         #Create the review
         text = postDate['review']
         rating = postDate['rating']
-        reviewer = postDate['current_user_id']
+        reviewer = postDate['user_id']
         try:
+            print "Trying to create book review"
             book_id = postDate['book_id']
             book_search = Books.objects.get(id=book_id)
         except Exception:
             errors['book']= 'Book is not in the database'
         if errors:
             return errors
-        Reviews.objects.create(text=text, rating=rating, reviewer=reviewer, book = book_id)
+        Reviews.objects.create(text=text, rating=rating, reviewer=reviewer, book = new_book_created)
         return errors
+
 class Authors(models.Model):
     author_name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add = True)
@@ -75,7 +77,7 @@ class Authors(models.Model):
 class Books(models.Model):
     title = models.CharField(max_length = 255)
     author = models.ForeignKey(Authors, related_name='authors')
-    user = models.ForeignKey(Users, related_name = "who_created_book")
+    user = models.ForeignKey(Users, related_name = "who_created_book", null=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = BooksValidator()
