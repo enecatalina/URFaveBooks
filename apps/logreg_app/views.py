@@ -10,6 +10,8 @@ def index(request):
     return render(request, "index.html")
 
 def create(request):
+    # if request.session['user_id'] == None:
+    #     return redirect(reverse('Users:index'))
     errors = Users.objects.register_validator(request.POST)
     if len(errors):
         for tag, error in errors.iteritems():
@@ -20,12 +22,14 @@ def create(request):
         current_user = Users.objects.get(email = request.POST['email'])
         request.session['user_id'] = current_user.id
         print "user was created"
-        return render(request, "books/success.html")
+        return redirect('books/success')
     print "user was able to create profile"
 
 
 def login(request):
-    print "show page working"
+    # if request.session['user_id'] == None:
+    #     return redirect(reverse('Users:index'))
+    print "IN --> login"
     errors = Users.objects.login_validator(request.POST)
     if len(errors):
         for tag, error in errors.iteritems():

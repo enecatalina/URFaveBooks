@@ -10,7 +10,9 @@ from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
 def success(request):
-    print "show page working"
+    # if request.session['user_id'] == None:
+    #     return redirect(reverse('Users:index'))
+    print "Books/Success Page "
     context = {
         'user': Users.objects.all(),
         'current_user': Users.objects.get(id=request.session['user_id']),
@@ -19,12 +21,14 @@ def success(request):
     return render(request, "success.html", context)
 
 def create(request):
+    # if request.session['user_id'] == None:
+    #     return redirect(reverse('Users:index'))
     if request.method == "POST":
         errors = Books.objects.validateBooks(request.POST)
         if len(errors):
-            for key, error in errors.iteritems():
-                print error
-        return redirect('/books/success')
+            for tag, error in errors.iteritems():
+                messages.error(request, error, extra_tags=tag)
+            return redirect(reverse('Books:Create'))
     else:
         context = {
             'authors' : Authors.objects.all()
@@ -32,7 +36,6 @@ def create(request):
     return render(request, 'create.html', context)
 
 def displaybook(request):
-
     return render(request, 'displaybook.html')
 
 def logout(request):

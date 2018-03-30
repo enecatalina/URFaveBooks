@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {% load static %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}">
     <title>Welcome to URFaveBooks!</title>
     <style>
-        .user_form th {
-            padding: 30px;
-        }
+        .navbar{
+        background-color: #3f2f23
+    }
+    .navbar-LOGO{
+        font-style: italic;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 500;
+        color: #f1e7d6,
+    }
+    .card{
+        display: inline-block;
+        margin: 30px;
+    }
     </style>
 </head>
 
@@ -24,56 +35,74 @@
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown link
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-            </ul>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                <!-- HOME BUTTON -->
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'Books:Success' %}">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                <!-- CREATE A BOOK BUTTON -->
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'Books:Create' %}"> Create a Book 
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                <!-- DROPDOWN / PROFILE / RECENT BOOKS / YOUR BOOKS/  -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropdown link
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Profile</a>
+                            <a class="dropdown-item" href="#">Recent Reviews</a>
+                            <a class="dropdown-item" href="#">Your Books</a>
+                        </div>
+                    </li>
+
+                <!-- LOGOUT BUTTON -->
+                    <li class="nav-item">
+                        <form action="logout" method="post">
+                            {% csrf_token %}
+                            <input type="submit" name="logout" value="logout">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Success! Welcome, {{ current_user.first_name }}</h1>
+                {% if messages %} {% for message in messages %}
+                <p class="lead"> {{ message }}</p>
+                {% endfor %} {% endif %}
+            </div>
         </div>
-    </nav>
-    <h1>Success! Welcome, {{ current_user.first_name }}</h1>
-    {% if messages %} {% for message in messages %}
-    <p> {{ message }}</p>
-    {% endfor %} 
-    {% endif %}
-    
-    <a href="/books/create"> Add a Book normal way</a>
-    <a href="{% url 'books:Create' %}"> Add a Book reverse way</a>
-        
-        <div class="logout">
-            <form action="logout" method="post">
-                {% csrf_token %}
-                <input type="submit" name="logout" value="logout">
-            </form>
-        </div>
+
     <div class="container-fluid">
+        <!-- BOOKS -->
         {% for books in books %}
-        <div>
-            {{books.title}}
-            {{books.author}}
-        {%endfor%}
-
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ books.title }}</h5>
+                <p class="card-text">{{ books.author_name }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Cras justo odio</li>
+                <li class="list-group-item">Dapibus ac facilisis in</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
+            <div class="card-body">
+                <!-- <a href="#" class="card-link"></a> -->
+                <a href="#" class="card-link">See More Reviews!</a>
+            </div>
         </div>
-
+        {%endfor%}
 
     </div>
 </body>

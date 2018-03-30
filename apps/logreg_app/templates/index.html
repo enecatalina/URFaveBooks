@@ -1,6 +1,5 @@
 <!DOCTYPE html> 
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,108 +11,159 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/loginreg.css' %}">
     <link rel="stylesheet" type="text/js" href="{% static 'js/loginreg.js' %}">
+    <style>
+    .navbar{
+        background-color: #3f2f23
+    }
+    .navbar-LOGO{
+        font-style: italic;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 500;
+        color: #f1e7d6,
+    }
+    .forms{
+        margin: 50px;
+    }
+    .login{
+        border: #3f2f23 solid 10px;
+        width: 700px;
+        display: inline-block;
+        margin-left: 0px;
+        margin-right: 15px;
+    }
+    .register{
+        border: #3f2f23 solid 10px;
+        width: 800px;
+        display: inline-block;
+    }
+    h1{
+        color: #f1e7d6,
+    }
+    /* .input-group{
+        color:#af9571;
+    } */
+    .input-group-text{
+       color: #949071;
+    }
+    .btn{
+        padding: 15px;
+        border: #949071 solid 4px;
+        background-color: #f1e7d6
+       
+    }
+</style>
     <script>
-     
     </script>
     <title>Book Review Login and Register</title>
 </head>
-
 <body>
     <div class="container-fluid">
             <!-- NAVIGATION BAR -->
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="/">UR - Fave -  Books</a>
+            <nav class="navbar">
+                <h1 class="navbar-LOGO">UR - Fave - Books</h1>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
+                        {% if requets.session.user_id == None %}
+                        {% else %}
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Home
+                            <a class="nav-link" href="/">Home
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="#">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Pricing</a>
-                        </li>
+                            <a class="nav-link" href="#">Recent Reviews</a>
+                        </li> -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Dropdown link
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="#">Recent Reviews</a>
+                                <a class="dropdown-item" href="#">Your Books</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <form action="logout" method="post">
+                                {% csrf_token %}
+                                <input type="submit" name="logout" value="logout">
+                            </form>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
+        <div class="container-fluid">
             <div class="forms">
                 <!-- LOGIN -->
-                    <div class="login">
-                        <h1>Login</h1>
-                        <form action="login" method="post">
-                            {% csrf_token %}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Email</span>
-                                </div>
-                                <input type="email" name="email" class="form-control">
+                <div class="login">
+                    <h1>Login</h1>
+                    <form action="login" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Email</span>
                             </div>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Password</span>
-                                </div>
-                                <input type="password" name="password" class="form-control">
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Password</span>
                             </div>
-                            <br>
-                            <input class="btn btn-lg btn-outline" type="submit" name="submit" value="Submit">
-                        </form>
-                        {% if messages %} {% for message in messages %}
-                        <p {% if messages.tags %} {% endif %}>
-                            {{ message }}</p>
-                        {% endfor %} {% endif %}
-                    </div>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <br>
+                        <input class="btn btn-lg btn-outline" type="submit" name="submit" value="Submit">
+                    </form>
+                    {% if messages %} {% for message in messages %}
+                    <p {% if messages.tags %} {% endif %}>
+                        {{ message }}</p>
+                    {% endfor %} {% endif %}
+                </div>
                 <!-- REGISTER -->
-                    <div class="register">
-                        <h1>Registration</h1>
-                        <form action="create" method="post">
-                            {% csrf_token %}
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">First and Last Name</span>
-                                </div>
-                                <input type="text" name="first_name" class="form-control">
-                                <input type="text" name="last_name" class="form-control">
+                <div class="register">
+                    <h1>Registration</h1>
+                    <form action="create" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">First and Last Name</span>
                             </div>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Email</span>
-                                </div>
-                                <input type="email" name="email" class="form-control">
+                            <input type="text" name="first_name" class="form-control">
+                            <input type="text" name="last_name" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Email</span>
                             </div>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Password</span>
-                                </div>
-                                <input type="password" name="password" class="form-control">
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Password</span>
                             </div>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Confirm Password</span>
-                                </div>
-                                <input type="password" name="cfpassword" class="form-control">
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Confirm Password</span>
                             </div>
-                            <br>
-                            <input class="btn btn-lg btn-outline" type="submit" name="submit" value="Submit">
-                        </form>
-                    </div>
+                            <input type="password" name="cfpassword" class="form-control">
+                        </div>
+                        <br>
+                        <input class="btn btn-lg btn-outline" type="submit" name="submit" value="Submit">
+                    </form>
+                </div>
             </div>
+        </div>
+            
     </div>
 
 </body>

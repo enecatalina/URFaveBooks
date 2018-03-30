@@ -11,15 +11,15 @@ class BooksValidator (models.Manager):
         new_author = False
         if len(postDate['title']) < 2:
             errors['title'] = "Title must have more then 2 characters" 
-        if len(postDate['author']) == 'None' and postDate['inputed_author'] == 'name':
-            errors['author'] = 'An author must be selected or added before submiting form'
-        if postDate['author'] != 'None' and postDate['inputed_author'] != 'name':
-            errors['author'] = 'You cannot select an author and try to add a new one at the same time'
+        if postDate['selected_author'] == 'None' and postDate['inputed_author'] == 'name':
+            errors['selected_author'] = 'An author must be selected or added before submiting form'
+        if postDate['selected_author'] != 'None' and postDate['inputed_author'] != 'name':
+            errors['selected_author'] = 'You cannot select an author and try to add a new one at the same time'
         try:
             #is the author already in the database?
             Books.objects.get(author=postDate['inputed_author'])
             #error message
-            errors['author'] = 'You cannot select an author and try to add a new one at the same time'
+            errors['author'] = 'This author is already been created'
         except Exception:
             if postDate['inputed_author'] != 'name':
                 new_author = True
@@ -27,14 +27,15 @@ class BooksValidator (models.Manager):
         if postDate['review'] < 10:
             errors['review'] = 'Your review needs to be more than ten characters long before submitting'
         if errors:
-            return (errors)
+            return errors
 
         # What author selection was used?
         #IF (TRUE) there was a NEW author selected 
         if new_author:
             #what is the name of the new author?
             input_created_author = postDate['inputed_author']
-            print input_created_author
+            print input_created_author 
+            print  "Created Author^^^^^^"
             #create the author and store in VAR
             new_author = Authors.objects.create(author_name = input_created_author)
             #Put the new author in a new VAR to use when CREATING the BOOK
@@ -43,9 +44,10 @@ class BooksValidator (models.Manager):
             #IF FALSE 
             #take the name of the SELECTED author
             selected_author = postDate['selected_author']
-            print  selected_author 
+            print selected_author
+            print  "Selected Author^^^^^^"
             #find the name of the selected author
-            author_for_book_created = Authors.objects.get(name = selected_author)
+            author_for_book_created = Authors.objects.get(author_name = selected_author)
             
         #Creating a new book
         title = postDate['title']
@@ -54,19 +56,21 @@ class BooksValidator (models.Manager):
         print new_book_created
 
         #Create the review
+        print "IN --> create REVIEW"
         text = postDate['review']
         rating = postDate['rating']
         reviewer = postDate['user_id']
-        try:
-            print "Trying to create book review"
-            book_id = postDate['book_id']
-            book_search = Books.objects.get(id=book_id)
-        except Exception:
-            errors['book']= 'Book is not in the database'
-        if errors:
-            return errors
-        Reviews.objects.create(text=text, rating=rating, reviewer=reviewer, book = new_book_created)
-        return errors
+
+        # try:
+        #     print "IN --> try block of create REVIEW"
+        #     book_id = postDate['book_id']
+        #     print book_id
+        # except Exception:
+        #     errors['book'] = 'Book is not in the database'
+        # if errors:
+        #     return errors
+        book_review = Reviews.objects.create(text=text, rating=rating, reviewer_id=reviewer, book=new_book_created)
+        # print book_review
 
 class Authors(models.Model):
     author_name = models.CharField(max_length=255)
