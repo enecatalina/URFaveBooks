@@ -12,46 +12,102 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/loginreg.css' %}">
     <link rel="stylesheet" type="text/js" href="{% static 'js/loginreg.js' %}">
     <style>
-    .navbar{
-        background-color: #3f2f23
-    }
-    .navbar-LOGO{
-        font-style: italic;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-weight: 500;
-        color: #f1e7d6,
-    }
-    .forms{
-        margin: 50px;
-    }
-    .login{
-        border: #3f2f23 solid 10px;
-        width: 700px;
-        display: inline-block;
-        margin-left: 0px;
-        margin-right: 15px;
-    }
-    .register{
-        border: #3f2f23 solid 10px;
-        width: 800px;
-        display: inline-block;
-    }
-    h1{
-        color: #f1e7d6,
-    }
-    /* .input-group{
-        color:#af9571;
-    } */
-    .input-group-text{
-       color: #949071;
-    }
-    .btn{
-        padding: 15px;
-        border: #949071 solid 4px;
-        background-color: #f1e7d6
-       
-    }
-</style>
+        body{
+            /* background-color:#f1e7d67a; */
+        }
+        .navbar{
+            background-color: #3f2f23;
+            padding: 20px;
+            width: 1700px;
+        }
+        .navbar-LOGO{
+            font-style: italic;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 500;
+            color: #f1e7d6;
+        }
+        h1{
+            color: #949071;
+            margin-left: 250px;
+        }
+        .forms{
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 200px;
+        }
+        .login{
+            /* border: #949071 solid 10px; */
+            width: 700px;
+            display: inline-block;
+            margin-top: 55px;
+            margin-right: 15.5px;
+            padding: 25px;
+            vertical-align: top;
+        }
+        .register{
+        /* border: #949071 solid 10px; */
+            width: 700px;
+            display: inline-block;
+            /* margin-top: 0px; */
+            margin-right: 15.5px;
+            padding: 25px;
+            vertical-align: top;
+        }
+        .input-group-prepend {
+            margin-right: -1px;
+        }
+        .input-group{
+            margin-bottom: 15px;
+        }
+        .input-group-text{
+            /* background-color: #949071; */
+            color:#949071;
+            font-style: italic;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: bolder;
+        }
+        /* .btn{
+            padding: 15px;
+            border: #949071 solid 4px;
+            background-color: #f1e7d6;
+            /* margin-left: 200px; */
+            /* width: 150px; */
+        
+        .button{
+            position: relative;
+            background-color: #949071;
+            border: none;
+            font-size: 20px;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.9s;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            width: 100%;
+        }
+        .button:after {
+            content: "";
+            background: #949071;
+            display: block;
+            position: absolute;
+            padding-top: 300%;
+            padding-left: 350%;
+            margin-left: -20px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.10s
+        }
+
+        .button:active:after {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 20s
+        }
+    </style>
     <script>
     </script>
     <title>Book Review Login and Register</title>
@@ -60,7 +116,7 @@
     <div class="container-fluid">
             <!-- NAVIGATION BAR -->
             <nav class="navbar">
-                <h1 class="navbar-LOGO">UR - Fave - Books</h1>
+                <h2 class="navbar-LOGO">UR - Fave - Books</h2>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -105,7 +161,7 @@
                 <!-- LOGIN -->
                 <div class="login">
                     <h1>Login</h1>
-                    <form action="login" method="post">
+                    <form name="myForm" action="login" method="post" onsubmit="return validateForm()">
                         {% csrf_token %}
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -120,7 +176,7 @@
                             <input type="password" name="password" class="form-control">
                         </div>
                         <br>
-                        <input class="btn btn-lg btn-outline" type="submit" name="submit" value="Submit">
+                        <button class="button" type="submit" name="submit" value="Submit">Submit </button>
                     </form>
                     {% if messages %} {% for message in messages %}
                     <p {% if messages.tags %} {% endif %}>
@@ -158,7 +214,7 @@
                             <input type="password" name="cfpassword" class="form-control">
                         </div>
                         <br>
-                        <input class="btn btn-lg btn-outline" type="submit" name="submit" value="Submit">
+                        <button class="button" type="submit" name="submit" value="Submit">Submit </button>
                     </form>
                 </div>
             </div>

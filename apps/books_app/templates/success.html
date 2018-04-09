@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     {% load static %}
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -12,30 +12,41 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}">
     <title>Welcome to URFaveBooks!</title>
     <style>
-        .navbar{
-        background-color: #3f2f23
-    }
+    .navbar{
+        background-color: #3f2f23;
+        padding: 20px;
+        width: 1700px;
+        color: #f1e7d6;
+     }
     .navbar-LOGO{
         font-style: italic;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         font-weight: 500;
-        color: #f1e7d6,
+        color: #f1e7d6;
+         margin-right: 880px;
+    }
+    a{
+        color: #f1e7d6;
     }
     .card{
         display: inline-block;
         margin: 30px;
+    }
+    .card-title{
+        margin-bottom: 0px;
     }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="/">UR - Fave - Books</a>
+        <h1 class="navbar-LOGO">UR - Fave - Books</h1>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
+               
                 <ul class="navbar-nav">
                 <!-- HOME BUTTON -->
                     <li class="nav-item active">
@@ -64,12 +75,13 @@
                     </li>
 
                 <!-- LOGOUT BUTTON -->
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <form action="logout" method="post">
                             {% csrf_token %}
                             <input type="submit" name="logout" value="logout">
                         </form>
                     </li>
+               
                 </ul>
             </div>
         </nav>
@@ -77,33 +89,31 @@
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
                 <h1 class="display-4">Success! Welcome, {{ current_user.first_name }}</h1>
-                {% if messages %} {% for message in messages %}
-                <p class="lead"> {{ message }}</p>
-                {% endfor %} {% endif %}
+               
             </div>
         </div>
 
     <div class="container-fluid">
         <!-- BOOKS -->
-        {% for books in books %}
+        {% for book in books %}
         <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
+            <img class="card-img-top" src="media/{{book.book_covers}}" alt="{{ books.title }}">
             <div class="card-body">
-                <h5 class="card-title">{{ books.title }}</h5>
-                <p class="card-text">{{ books.author_name }}</p>
+                <h5 class="card-title">{{ book.title }}</h5> 
+                <small class="text-muted">By: {{ book.author.author_name }}</small>
+                <p class="card-text">{{ reviews.rating }} Make it average book rating</p>
             </div>
+        
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item">{{ reviews.text }}</li>
             </ul>
+            
             <div class="card-body">
                 <!-- <a href="#" class="card-link"></a> -->
-                <a href="#" class="card-link">See More Reviews!</a>
+                <a href="display/{{book.id}}" class="card-link">See More Reviews!</a>
             </div>
         </div>
-        {%endfor%}
-
+        {% endfor %}
     </div>
 </body>
 

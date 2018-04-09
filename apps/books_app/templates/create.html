@@ -11,57 +11,90 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/new_book.css' %}">
-    <link rel="stylesheet" type="text/js" href="{% static 'js/new_book.js' %}">
     <script>
 
     </script>
+    <style>
+        .navbar {
+            background-color: #3f2f23;
+            padding: 20px;
+            width: 1700px;
+            color: #f1e7d6;
+        }
+    
+        .navbar-LOGO {
+            font-style: italic;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 500;
+            color: #f1e7d6;
+            margin-right: 880px;
+        }
+    
+        a {
+            color: #f1e7d6;
+        }
+        .container-fluid form{
+            padding: 150px;
+        }
+        .input-group{
+            margin-bottom: 30px;
+        }
+        select{
+            margin-bottom: 30px;
+        }
+    </style>
     <title>Book Review Login and Register</title>
 </head>
 <body>
-    <!-- NAVIGATION BAR -->
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="/">UR - Fave - Books</a>
+        <h1 class="navbar-LOGO">UR - Fave - Books</h1>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    {% if requets.session.user_id == None %} {% else %}
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <!-- <li class="nav-item">
-                                        <a class="nav-link" href="#">Profile</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">Recent Reviews</a>
-                                    </li> -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown link
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Profile</a>
-                            <a class="dropdown-item" href="#">Recent Reviews</a>
-                            <a class="dropdown-item" href="#">Your Books</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <form action="logout" method="post">
-                            {% csrf_token %}
-                            <input type="submit" name="logout" value="logout">
-                        </form>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    
+            <ul class="navbar-nav">
+                <!-- HOME BUTTON -->
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'Books:Success' %}">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+    
+                <!-- CREATE A BOOK BUTTON -->
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'Books:Create' %}"> Create a Book
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+    
+                <!-- DROPDOWN / PROFILE / RECENT BOOKS / YOUR BOOKS/  -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown link
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="#">Recent Reviews</a>
+                        <a class="dropdown-item" href="#">Your Books</a>
+                    </div>
+                </li>
+    
+                <!-- LOGOUT BUTTON -->
+                <li class="nav-item active">
+                    <form action="logout" method="post">
+                        {% csrf_token %}
+                        <input type="submit" name="logout" value="logout">
+                    </form>
+                </li>
+    
+            </ul>
+        </div>
     </nav>
+
     <div class="container-fluid">
-        <form action="/books/create" method="post">
+        <form action="/books/create" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <!-- TITLE -->
             <div class="input-group">
@@ -70,24 +103,37 @@
                 </div>
                 <input type="text" name="title" class="form-control">
             </div>
+
             <!-- AUTHOR -->
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Book Author</span>
+                    <label class="input-group-text" for="inputGroupSelect01">Choose an Author</label>
                 </div>
-                <select name="selected_author">
-                    <option name="selected_author"value="None">N/A</option>
+                <select name="selected_author" class="custom-select" id="inputGroupSelect01">
+                    <option selected name="selected_author" value="None">Choose...</option>
                     {% for author in authors %}
                     <option value="{{ author.author_name }}">{{ author.author_name}}</option>
                     {% endfor %}
                 </select>
             </div>
-                <!-- New AUTHOR -->
-            <div class="input-group">
+            <!-- <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Book Author</span>
                 </div>
-                <input type="text" name="inputed_author" class="form-control">
+                <select name="selected_author">
+                    <option name="selected_author" value="None"></option>
+                    {% for author in authors %}
+                    <option value="{{ author.author_name }}">{{ author.author_name}}</option>
+                    {% endfor %}
+                </select>
+            </div> -->
+
+                <!-- New AUTHOR -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Create a Book Author</span>
+                </div>
+                <input type="text" name="inputed_author" value="author_name" class="form-control">
             </div>
 
                 <!-- REVIEW -->
@@ -99,13 +145,33 @@
             </div>
             
             <!-- RATING -->
-            <select name="rating" id="">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Star Rating</label>
+                </div>
+                <select name="rating" class="custom-select"  id="inputGroupSelect01">
+                    <option selected>Choose...</option>
+                    <option value="0">1</option>
+                    <option value="1">2</option>
+                    <option value="2">3</option>
+                    <option value="3">4</option>
+                    <option value="3">5</option>
+                </select>
+            </div>
+
+            <!-- Book Covers /IMG Upload -->
+            <h4>Would you like to upload a book cover?</h4>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile01" name="book_covers" accept="image/*">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
+                </div> 
+
+
             <input type="hidden" name="user_id" value="{{ request.session.user_id }}">
             <input type="submit" name="submit" value="Add New Book"  class="btn btn-lg btn-outline">
             

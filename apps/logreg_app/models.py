@@ -14,12 +14,12 @@ class BlogManager(models.Manager):
         errors = {}
         # check length of first and last name
         if len(postData['first_name']) < 2:
-            errors['first_name']= "Field name is too short has to be more than 2 letters"
+            errors['first_name'] = "Field name is too short has to be more than 2 letters"
         if len(postData['last_name']) < 2:
-            errors['last_name']= "Field name is too short has to be more than 2 letters"
+            errors['last_name'] = "Field name is too short has to be more than 2 letters"
         # check length of the password
         if len(postData['password']) < 8:
-            errors['password']= "Password must be at least 8 characters"
+            errors['password'] = "Password must be at least 8 characters"
         if not re.match(EMAIL_REGEX, postData['email']):
             errors['email'] = ("Invalid email format")
         if not re.match(NAME_REGEX, postData['first_name']):
@@ -57,8 +57,6 @@ class BlogManager(models.Manager):
         try:
             print "GOT TO THE TRY BLOCK"
             correct_user = Users.objects.get(email = postData['email'])
-            print postData['password']
-            print correct_user.password
             if not bcrypt.checkpw(postData['password'].encode('utf8'), correct_user.password.encode('utf8')):
                 errors['password'] = 'invalid credentials!!!!!!!!'
         except:

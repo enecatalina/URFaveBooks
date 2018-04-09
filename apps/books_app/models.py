@@ -2,32 +2,44 @@
 from __future__ import unicode_literals
 
 from django.db import models
+import datetime
+import re
+from django.core.exceptions import ObjectDoesNotExist
 from ..logreg_app.models import Users
+from django.core.files import File
 
 # Create your models here.
 class BooksValidator (models.Manager):
-    def validateBooks(self,postDate):
+    def validateBooks(self, postDate, postFILES, current_user):
         errors = {}
         new_author = False
-        if len(postDate['title']) < 2:
+        if postDate['rating'] == 'selected':
+            errors["rating"] = "Please choose a rating"
+        # if (int(postDate['rating']) < 1 ) | (int(postDate['rating']) > 5):
+        #     errors["rating"] = "Rating should be between 0 and 5"
+        if len(postDate['title']) < 3:
             errors['title'] = "Title must have more then 2 characters" 
-        if postDate['selected_author'] == 'None' and postDate['inputed_author'] == 'name':
+        if len(postDate['review']) < 10:
+            errors['review'] = 'Your review needs to be more than 10 characters long before submitting'
+        if postDate['selected_author'] == 'selected_author' and postDate['inputed_author'] == 'author_name':
             errors['selected_author'] = 'An author must be selected or added before submiting form'
-        if postDate['selected_author'] != 'None' and postDate['inputed_author'] != 'name':
-            errors['selected_author'] = 'You cannot select an author and try to add a new one at the same time'
+        # if postDate['selected_author'] != 'selected_author' and postDate['inputed_author'] != 'author_name':
+        #     errors['selected_author'] = 'You cannot try to add an author and create one at the same time'
         try:
             #is the author already in the database?
-            Books.objects.get(author=postDate['inputed_author'])
-            #error message
-            errors['author'] = 'This author is already been created'
+            Authors.objects.get(author_name = postDate['inputed_author'])
+            errors['inputed_author'] = 'This author is already been created'
         except Exception:
-            if postDate['inputed_author'] != 'name':
+            if postDate['inputed_author'] != 'author_name':    
                 new_author = True
-        
-        if postDate['review'] < 10:
-            errors['review'] = 'Your review needs to be more than ten characters long before submitting'
+        try:
+            Books.objects.get(title=postDate['title'])
+            errors['title'] = "Book is already created"
+        except Exception:
+           if postDate['title'] != 'title':
+                print errors
         if errors:
-            return errors
+            return (errors)
 
         # What author selection was used?
         #IF (TRUE) there was a NEW author selected 
@@ -48,11 +60,20 @@ class BooksValidator (models.Manager):
             print  "Selected Author^^^^^^"
             #find the name of the selected author
             author_for_book_created = Authors.objects.get(author_name = selected_author)
-            
+        
+          #Try grabbing an image if it was uploaded
+        try:
+            book_covers = postFILES['book_covers']
+            print book_covers
+        except:
+            book_covers = ''
+            print 'No image'
+
         #Creating a new book
         title = postDate['title']
         user_id = postDate['user_id']
-        new_book_created = Books.objects.create(title=title, author=author_for_book_created, user_id=user_id)
+        book_covers = book_covers
+        new_book_created = Books.objects.create(title=title, author=author_for_book_created, user_id=user_id , book_covers=book_covers)
         print new_book_created
 
         #Create the review
@@ -60,20 +81,13 @@ class BooksValidator (models.Manager):
         text = postDate['review']
         rating = postDate['rating']
         reviewer = postDate['user_id']
-
-        # try:
-        #     print "IN --> try block of create REVIEW"
-        #     book_id = postDate['book_id']
-        #     print book_id
-        # except Exception:
-        #     errors['book'] = 'Book is not in the database'
-        # if errors:
-        #     return errors
         book_review = Reviews.objects.create(text=text, rating=rating, reviewer_id=reviewer, book=new_book_created)
         # print book_review
+        if errors:
+            return errors
 
 class Authors(models.Model):
-    author_name = models.CharField(max_length=255)
+    author_name = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = BooksValidator()
@@ -82,6 +96,7 @@ class Books(models.Model):
     title = models.CharField(max_length = 255)
     author = models.ForeignKey(Authors, related_name='authors')
     user = models.ForeignKey(Users, related_name = "who_created_book", null=True)
+    book_covers = models.ImageField(upload_to="'uploads/%Y/%m'", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = BooksValidator()
